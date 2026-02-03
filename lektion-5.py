@@ -35,3 +35,13 @@ def insert_product(conn: Connection, product:ProductSchema):
         "INSERT INTO products_raw(product) VALUES (%s)",
         (Json(product),)  # TODO : Explore the syntax
     )
+
+@app.get("/products" )
+def get_products ():
+    with pool.connection () as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT product FROM products_raw" )
+            rows = cur.fetchall()
+
+    # rows = [(product_dict,), (product_dict,), ...]
+    return [row[0] for row in rows]
